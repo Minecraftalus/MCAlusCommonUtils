@@ -2,6 +2,7 @@ package net.minecraftalus.mcaluscommonutils.commands.argument;
 
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.arguments.ArgumentType;
+import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.Suggestions;
@@ -10,6 +11,7 @@ import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.command.argument.BlockPosArgumentType;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -19,7 +21,9 @@ import net.minecraft.util.math.Vec3d;
 import java.rmi.registry.Registry;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Stream;
 
 public class PositionArgumentType implements ArgumentType<Position> {
     private static final Collection<String> EXAMPLES = List.of("X", "X Y", "X Y Z", "~", "~ ~", "~ ~ ~");
@@ -53,45 +57,41 @@ public class PositionArgumentType implements ArgumentType<Position> {
     @Override
     public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
         HitResult hitResult = MinecraftClient.getInstance().crosshairTarget;
-        Vec3d hitPos = null;
-        boolean isTargetingBlock = false;
-
-        if (hitResult != null && hitResult.getType() == HitResult.Type.BLOCK) {
-            BlockHitResult blockHitResult = (BlockHitResult) hitResult;
-            BlockPos blockPos = blockHitResult.getBlockPos();
-            BlockState blockState = MinecraftClient.getInstance().world.getBlockState(blockPos);
-
-            if (blockState.getBlock() != Blocks.AIR) {
-                hitPos = blockHitResult.getPos();
-                isTargetingBlock = true;
-            }
-        }
-
         String remaining = builder.getRemaining();
 
+        boolean isTargetingBlock = Optional.ofNullable(hitResult)
+                .filter(h -> h.getType() == HitResult.Type.BLOCK)
+                .map(h -> (BlockHitResult) h)
+                .map(BlockHitResult::getBlockPos)
+                .map(MinecraftClient.getInstance().world::getBlockState)
+                .map(BlockState::getBlock)
+                .map(b -> b != Blocks.AIR)
+                .orElse(false);
+
         if (isTargetingBlock) {
+            BlockHitResult blockHitResult = (BlockHitResult) hitResult;
+            Vec3d hitPos = blockHitResult.getPos();
             int x = (int) Math.floor(hitPos.x);
             int y = (int) Math.floor(hitPos.y);
             int z = (int) Math.floor(hitPos.z);
 
-            List<String> suggestions = List.of(String.valueOf(x), String.format("%d %d", x, y), String.format("%d %d %d", x, y, z));
-            for (String suggestion : suggestions) {
-                if (suggestion.startsWith(remaining)) {
-                    builder.suggest(suggestion);
-                }
-            }
+            List<String> suggestions = List.of(
+                    String.valueOf(x),
+                    String.format("%d %d", x, y),
+                    String.format("%d %d %d", x, y, z)
+            );
+
+            suggestions.stream()
+                    .filter(s -> s.startsWith(remaining))
+                    .forEach(builder::suggest);
         } else {
-            List<String> suggestions = List.of("~", "~ ~", "~ ~ ~");
-            for (String suggestion : suggestions) {
-                if (suggestion.startsWith(remaining)) {
-                    builder.suggest(suggestion);
-                }
-            }
+            Stream.of("~", "~ ~", "~ ~ ~")
+                    .filter(s -> s.startsWith(remaining))
+                    .forEach(builder::suggest);
         }
 
         return builder.buildFuture();
     }
-
     public static PositionArgumentType pos() {
         return new PositionArgumentType();
     }
