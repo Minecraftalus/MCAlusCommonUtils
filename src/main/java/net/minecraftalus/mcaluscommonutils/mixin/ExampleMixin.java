@@ -1,6 +1,7 @@
 package net.minecraftalus.mcaluscommonutils.mixin;
 
 import net.minecraft.server.MinecraftServer;
+import net.minecraftalus.mcaluscommonutils.MCAlusCommonUtils;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

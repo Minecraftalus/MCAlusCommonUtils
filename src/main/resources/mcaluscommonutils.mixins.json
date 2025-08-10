@@ -1,6 +1,6 @@
 {
 	"required": true,
-	"package": "net.minecraftalus.skintostatue.mixin",
+	"package": "net.minecraftalus.mcaluscommonutils.mixin",
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
 		"ExampleMixin"

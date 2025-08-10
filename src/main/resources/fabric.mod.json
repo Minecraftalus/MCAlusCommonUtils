@@ -1,8 +1,8 @@
 {
 	"schemaVersion": 1,
-	"id": "skintostatue",
+	"id": "mcaluscommonutils",
 	"version": "${version}",
-	"name": "Skin To Statue",
+	"name": "Minecraftalus' Common Utils",
 	"description": "This is an example description! Tell everyone what your mod is about!",
 	"authors": [
 		"Minecraftalus"
@@ -12,15 +12,15 @@
 		"sources": "https://github.com/FabricMC/fabric-example-mod"
 	},
 	"license": "CC0-1.0",
-	"icon": "assets/skintostatue/icon.png",
+	"icon": "assets/mcaluscommonutils/icon.png",
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"net.minecraftalus.skintostatue.SkinToStatue"
+			"net.minecraftalus.mcaluscommonutils.MCAlusCommonUtils"
 		]
 	},
 	"mixins": [
-		"skintostatue.mixins.json"
+		"mcaluscommonutils.mixins.json"
 	],
 	"depends": {
 		"fabricloader": ">=0.16.14",
