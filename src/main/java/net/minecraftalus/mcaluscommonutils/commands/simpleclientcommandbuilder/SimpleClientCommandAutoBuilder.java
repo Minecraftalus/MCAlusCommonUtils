@@ -1,4 +1,4 @@
-package net.minecraftalus.skintostatue.commands.simpleclientcommandbuilder;
+package net.minecraftalus.mcaluscommonutils.commands.simpleclientcommandbuilder;
 
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
@@ -9,7 +9,7 @@ import io.github.classgraph.ScanResult;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
-import net.minecraftalus.skintostatue.commands.argument.CommandArgument;
+import net.minecraftalus.mcaluscommonutils.commands.argument.CommandArgument;
 
 public class SimpleClientCommandAutoBuilder {
 

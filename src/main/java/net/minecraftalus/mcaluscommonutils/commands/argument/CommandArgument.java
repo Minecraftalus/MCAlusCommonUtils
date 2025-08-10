@@ -1,4 +1,4 @@
-package net.minecraftalus.skintostatue.commands.argument;
+package net.minecraftalus.mcaluscommonutils.commands.argument;
 
 import com.mojang.brigadier.arguments.ArgumentType;
 

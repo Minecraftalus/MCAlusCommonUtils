@@ -1,7 +1,7 @@
-package net.minecraftalus.skintostatue;
+package net.minecraftalus.mcaluscommonutils;
 
 import net.fabricmc.api.ModInitializer;
-import net.minecraftalus.skintostatue.commands.simpleclientcommandbuilder.SimpleClientCommandAutoBuilder;
+import net.minecraftalus.mcaluscommonutils.commands.simpleclientcommandbuilder.SimpleClientCommandAutoBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

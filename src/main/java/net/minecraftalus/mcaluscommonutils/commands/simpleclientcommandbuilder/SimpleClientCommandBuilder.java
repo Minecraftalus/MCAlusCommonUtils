@@ -1,8 +1,8 @@
-package net.minecraftalus.skintostatue.commands.simpleclientcommandbuilder;
+package net.minecraftalus.mcaluscommonutils.commands.simpleclientcommandbuilder;
 
 import com.mojang.brigadier.Command;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
-import net.minecraftalus.skintostatue.commands.argument.CommandArgument;
+import net.minecraftalus.mcaluscommonutils.commands.argument.CommandArgument;
 
 import java.util.List;
 

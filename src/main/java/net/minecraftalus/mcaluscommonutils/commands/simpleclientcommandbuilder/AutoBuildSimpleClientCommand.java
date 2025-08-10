@@ -1,4 +1,4 @@
-package net.minecraftalus.skintostatue.commands.simpleclientcommandbuilder;
+package net.minecraftalus.mcaluscommonutils.commands.simpleclientcommandbuilder;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

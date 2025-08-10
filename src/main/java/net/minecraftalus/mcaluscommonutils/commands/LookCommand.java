@@ -1,18 +1,13 @@
-package net.minecraftalus.skintostatue.commands;
+package net.minecraftalus.mcaluscommonutils.commands;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.EmptyBlockView;
-import net.minecraftalus.skintostatue.commands.argument.CommandArgument;
-import net.minecraftalus.skintostatue.commands.simpleclientcommandbuilder.AutoBuildSimpleClientCommand;
-import net.minecraftalus.skintostatue.commands.simpleclientcommandbuilder.SimpleClientCommandBuilder;
+import net.minecraftalus.mcaluscommonutils.commands.argument.CommandArgument;
+import net.minecraftalus.mcaluscommonutils.commands.simpleclientcommandbuilder.AutoBuildSimpleClientCommand;
+import net.minecraftalus.mcaluscommonutils.commands.simpleclientcommandbuilder.SimpleClientCommandBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
