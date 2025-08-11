@@ -37,14 +37,13 @@ public class SimpleClientCommandAutoBuilder {
     }
 
     private static void registerCommand(SimpleClientCommandBuilder commandBuilder) {
-        // populate once
         commandBuilder.registerArguments();
 
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
             LiteralArgumentBuilder<FabricClientCommandSource> literal = ClientCommandManager.literal(commandBuilder.getName());
 
             if (commandBuilder.getArguments().isEmpty()) {
-                literal.executes(commandBuilder.onExecute());
+                literal.executes(commandBuilder::onExecute);
             } else {
                 RequiredArgumentBuilder<FabricClientCommandSource, ?> argumentBuilder = null;
                 for (int i = commandBuilder.getArguments().size() - 1; i >= 0; i--) {
@@ -53,7 +52,7 @@ public class SimpleClientCommandAutoBuilder {
                             ClientCommandManager.argument(argument.getName(), (ArgumentType<?>) argument.getType());
 
                     if (argumentBuilder == null) {
-                        newArgumentBuilder.executes(commandBuilder.onExecute());
+                        newArgumentBuilder.executes(commandBuilder::onExecute);
                     } else {
                         newArgumentBuilder.then(argumentBuilder);
                     }
@@ -61,7 +60,6 @@ public class SimpleClientCommandAutoBuilder {
                 }
                 literal.then(argumentBuilder);
             }
-
             dispatcher.register(literal);
         });
     }

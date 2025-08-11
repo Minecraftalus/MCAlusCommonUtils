@@ -7,14 +7,10 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.input.KeyCodes;
 
-import java.awt.*;
-import java.awt.event.KeyEvent;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Stream;
 
 public class RotationArgumentType implements ArgumentType<Rotation> {
     private static final Collection<String> EXAMPLES = List.of("Y", "Y P");
