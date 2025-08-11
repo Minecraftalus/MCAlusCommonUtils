@@ -2,23 +2,17 @@ package net.minecraftalus.mcaluscommonutils.commands.argument;
 
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.arguments.ArgumentType;
-import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.command.argument.BlockPosArgumentType;
-import net.minecraft.registry.Registries;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
-import java.rmi.registry.Registry;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -40,13 +34,17 @@ public class PositionArgumentType implements ArgumentType<Position> {
 
     @Override
     public Position parse(StringReader stringReader) throws CommandSyntaxException {
-        Vec3d playerPos = MinecraftClient.getInstance().player.getPos();
-        int x = parseCoordinate(stringReader, playerPos.x);
-        stringReader.skipWhitespace();
-        int y = parseCoordinate(stringReader, playerPos.y);
-        stringReader.skipWhitespace();
-        int z = parseCoordinate(stringReader, playerPos.z);
-        return new Position(x, y, z);
+        Vec3d playerPos = MinecraftClient.getInstance().player != null ? MinecraftClient.getInstance().player.getPos() : null;
+
+        if (playerPos!=null){
+            int x = parseCoordinate(stringReader, playerPos.x);
+            stringReader.skipWhitespace();
+            int y = parseCoordinate(stringReader, playerPos.y);
+            stringReader.skipWhitespace();
+            int z = parseCoordinate(stringReader, playerPos.z);
+            return new Position(x, y, z);
+        }
+        return null;
     }
 
     @Override
@@ -59,14 +57,17 @@ public class PositionArgumentType implements ArgumentType<Position> {
         HitResult hitResult = MinecraftClient.getInstance().crosshairTarget;
         String remaining = builder.getRemaining();
 
-        boolean isTargetingBlock = Optional.ofNullable(hitResult)
-                .filter(h -> h.getType() == HitResult.Type.BLOCK)
-                .map(h -> (BlockHitResult) h)
-                .map(BlockHitResult::getBlockPos)
-                .map(MinecraftClient.getInstance().world::getBlockState)
-                .map(BlockState::getBlock)
-                .map(b -> b != Blocks.AIR)
-                .orElse(false);
+        boolean isTargetingBlock = false;
+        if (MinecraftClient.getInstance().world != null) {
+            isTargetingBlock = Optional.ofNullable(hitResult)
+                    .filter(h -> h.getType() == HitResult.Type.BLOCK)
+                    .map(h -> (BlockHitResult) h)
+                    .map(BlockHitResult::getBlockPos)
+                    .map(MinecraftClient.getInstance().world::getBlockState)
+                    .map(BlockState::getBlock)
+                    .map(b -> b != Blocks.AIR)
+                    .orElse(false);
+        }
 
         if (isTargetingBlock) {
             BlockHitResult blockHitResult = (BlockHitResult) hitResult;

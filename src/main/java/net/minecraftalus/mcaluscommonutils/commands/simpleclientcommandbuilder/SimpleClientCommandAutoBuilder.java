@@ -9,6 +9,7 @@ import io.github.classgraph.ScanResult;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.minecraftalus.mcaluscommonutils.MCAlusCommonUtils;
 import net.minecraftalus.mcaluscommonutils.commands.argument.CommandArgument;
 
 public class SimpleClientCommandAutoBuilder {
@@ -29,7 +30,7 @@ public class SimpleClientCommandAutoBuilder {
                     SimpleClientCommandBuilder commandBuilder = (SimpleClientCommandBuilder) clazz.getDeclaredConstructor().newInstance();
                     registerCommand(commandBuilder);
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    MCAlusCommonUtils.LOGGER.error("An error occurred while auto registering simple client commands", e);
                 }
             }
         }

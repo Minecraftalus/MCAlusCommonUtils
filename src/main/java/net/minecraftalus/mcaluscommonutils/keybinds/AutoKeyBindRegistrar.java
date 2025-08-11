@@ -6,6 +6,8 @@ import io.github.classgraph.ScanResult;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.option.KeyBinding;
+import net.minecraftalus.mcaluscommonutils.MCAlusCommonUtils;
+
 
 public class AutoKeyBindRegistrar {
     public static void initialize() {
@@ -24,7 +26,7 @@ public class AutoKeyBindRegistrar {
                     KeyBindingBuilder commandBuilder = (KeyBindingBuilder) clazz.getDeclaredConstructor().newInstance();
                     registerKeybind(commandBuilder);
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    MCAlusCommonUtils.LOGGER.error("An error occurred while auto registering key binds", e);
                 }
             }
         }
