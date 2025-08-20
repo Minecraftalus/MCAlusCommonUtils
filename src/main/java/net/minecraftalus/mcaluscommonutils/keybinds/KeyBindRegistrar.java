@@ -8,8 +8,13 @@ import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraftalus.mcaluscommonutils.MCAlusCommonUtils;
 
+import java.util.HashSet;
+import java.util.Set;
 
-public class AutoKeyBindRegistrar {
+public class KeyBindRegistrar {
+
+    private static final Set<String> REGISTERED_KEYBINDS = new HashSet<>();
+
     public static void initialize() {
         ClassLoader classLoader = KeyBindingBuilder.class.getClassLoader();
 
@@ -23,15 +28,23 @@ public class AutoKeyBindRegistrar {
                     .filter(classInfo -> classInfo.implementsInterface(KeyBindingBuilder.class.getName()))) {
                 try {
                     Class<?> clazz = classInfo.loadClass();
-                    KeyBindingBuilder commandBuilder = (KeyBindingBuilder) clazz.getDeclaredConstructor().newInstance();
-                    registerKeybind(commandBuilder);
+                    KeyBindingBuilder keyBindingBuilder = (KeyBindingBuilder) clazz.getDeclaredConstructor().newInstance();
+                    registerKeybind(keyBindingBuilder);
                 } catch (Exception e) {
                     MCAlusCommonUtils.LOGGER.error("An error occurred while auto registering key binds", e);
                 }
             }
         }
     }
-    private static void registerKeybind(KeyBindingBuilder keyBindingBuilder) {
+
+    public static void registerKeybind(KeyBindingBuilder keyBindingBuilder) {
+        String keybindTranslationName = keyBindingBuilder.getTranslationName();
+        if (REGISTERED_KEYBINDS.contains(keybindTranslationName)) {
+            MCAlusCommonUtils.LOGGER.warn("Keybind '{}' is already registered. Skipping.", keybindTranslationName);
+            return;
+        }
+
+        REGISTERED_KEYBINDS.add(keybindTranslationName);
         KeyBinding keyBinding = KeyBindingHelper.registerKeyBinding(
                 new KeyBinding(
                         keyBindingBuilder.getTranslationName(),

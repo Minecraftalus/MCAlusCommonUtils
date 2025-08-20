@@ -12,7 +12,12 @@ import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraftalus.mcaluscommonutils.MCAlusCommonUtils;
 import net.minecraftalus.mcaluscommonutils.commands.argument.CommandArgument;
 
-public class SimpleClientCommandAutoBuilder {
+import java.util.HashSet;
+import java.util.Set;
+
+public class SimpleClientCommandRegistrar {
+
+    private static final Set<String> REGISTERED_COMMANDS = new HashSet<>();
 
     public static void initialize() {
         ClassLoader classLoader = SimpleClientCommandBuilder.class.getClassLoader();
@@ -36,11 +41,18 @@ public class SimpleClientCommandAutoBuilder {
         }
     }
 
-    private static void registerCommand(SimpleClientCommandBuilder commandBuilder) {
+    public static void registerCommand(SimpleClientCommandBuilder commandBuilder) {
+        String commandName = commandBuilder.getName();
+        if (REGISTERED_COMMANDS.contains(commandName)) {
+            MCAlusCommonUtils.LOGGER.warn("Command '{}' is already registered. Skipping.", commandName);
+            return;
+        }
+
+        REGISTERED_COMMANDS.add(commandName);
         commandBuilder.registerArguments();
 
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
-            LiteralArgumentBuilder<FabricClientCommandSource> literal = ClientCommandManager.literal(commandBuilder.getName());
+            LiteralArgumentBuilder<FabricClientCommandSource> literal = ClientCommandManager.literal(commandName);
 
             if (commandBuilder.getArguments().isEmpty()) {
                 literal.executes(commandBuilder::onExecute);
